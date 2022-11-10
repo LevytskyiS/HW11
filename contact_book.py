@@ -1,6 +1,7 @@
 from collections import UserDict
 from datetime import date
 
+
 class AddressBook(UserDict):
 
     def add_record(self, record):
@@ -24,42 +25,41 @@ class AddressBook(UserDict):
                 res.append(value.birthday)
         return res
 
+
 class Iterable:
 
-    def __init__(self, add_book, number_of_pages):
-        self.current_page = 1
+    def __init__(self, add_book: AddressBook, number_of_pages):
+        self.current_page = 0
         self.add_book = add_book
         self.number_of_pages = number_of_pages
         self.result_pages = []
-        
-    def __next__(self):
-        if self.current_page <= self.number_of_pages:
-            for k, v in self.add_book.items():
-                print(k, v)
-                if v.birthday:
-                    result = ' '.join(f'Name: {k} Phone: {v.value} Birthday: {v.birthday.object_date.strftime("%A %d %B %Y")}')
-                    self.result_pages.append(result)
-                    self.current_page += 1
-                    return result
-                elif not v.birthday:
-                    result = ' '.join(f'Name: {k} Phone: {v.value} Birthday: {v.birthday}')
-                    self.result_pages.append(result)
-                    self.current_page += 1
-                    return result
-        raise StopIteration
 
-class IterAddBook:
-    def __init__(self, add_book, number_of_pages):
-        self.add_book = add_book
-        self.number_of_pages = number_of_pages
-    
     def __iter__(self):
-        return Iterable(self.add_book, self.number_of_pages)
+        for k, v in self.add_book.items():
+
+            if v.birthday:
+                result = f'Name: {k} Phone: {[i.value for i in v.list_of_obj_of_phone]} Birthday: {v.birthday.object_date.strftime("%A %d %B %Y")}'
+                self.result_pages.append(result)
+
+            elif not v.birthday:
+                result = f'Name: {k} Phone: {[i.value for i in v.list_of_obj_of_phone]} Birthday: {v.birthday}'
+                self.result_pages.append(result)
+            self.current_page += 1
+
+            if self.current_page == self.number_of_pages:
+                yield self.result_pages
+                self.result_pages = []
+                self.current_page = 0
+
+        if self.result_pages:
+            yield self.result_pages
 
 
 class Field:
+    
     def __init__(self, value) -> None:
         self.value = value
+
 
 class Name(Field):
 
@@ -75,6 +75,7 @@ class Name(Field):
     @value.setter
     def value(self, value):
         self.__value = value
+
 
 class Phone(Field):
 
