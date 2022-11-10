@@ -12,13 +12,50 @@ class AddressBook(UserDict):
             return [num.value for num in record.list_of_obj_of_phone]
         else: 
             return f'This guy doesn`t have a number.'
-    
+        
     def show_all_contacts(self):
         res = []
         for key, value in self.data.items():
             res.append(key)
             res.append([num.value for num in value.list_of_obj_of_phone])
+            if value.birthday:
+                res.append(value.birthday.object_date.strftime("%A %d %B %Y"))
+            else:
+                res.append(value.birthday)
         return res
+
+class Iterable:
+
+    def __init__(self, add_book, number_of_pages):
+        self.current_page = 1
+        self.add_book = add_book
+        self.number_of_pages = number_of_pages
+        self.result_pages = []
+        
+    def __next__(self):
+        if self.current_page <= self.number_of_pages:
+            for k, v in self.add_book.items():
+                print(k, v)
+                if v.birthday:
+                    result = ' '.join(f'Name: {k} Phone: {v.value} Birthday: {v.birthday.object_date.strftime("%A %d %B %Y")}')
+                    self.result_pages.append(result)
+                    self.current_page += 1
+                    return result
+                elif not v.birthday:
+                    result = ' '.join(f'Name: {k} Phone: {v.value} Birthday: {v.birthday}')
+                    self.result_pages.append(result)
+                    self.current_page += 1
+                    return result
+        raise StopIteration
+
+class IterAddBook:
+    def __init__(self, add_book, number_of_pages):
+        self.add_book = add_book
+        self.number_of_pages = number_of_pages
+    
+    def __iter__(self):
+        return Iterable(self.add_book, self.number_of_pages)
+
 
 class Field:
     def __init__(self, value) -> None:
@@ -78,6 +115,7 @@ class Record:
     def __init__(self, name) -> None:
         self.name = Name(name)
         self.list_of_obj_of_phone = []
+        self.birthday = None
             
     def add_new_phone(self, phone):
         self.list_of_obj_of_phone.append(Phone(phone))

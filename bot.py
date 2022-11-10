@@ -1,4 +1,4 @@
-from contact_book import AddressBook, Record
+from contact_book import AddressBook, Record, IterAddBook
 from datetime import date
 
 '''
@@ -35,6 +35,12 @@ def exit_func(*_):
 @decor
 def contact_book(*_):
     return address_book.show_all_contacts()
+
+@decor
+def show_by_pages(pages):
+    result = IterAddBook(address_book, int(pages[0]))
+    for x in result:
+        print(x)
 
 @decor
 def new_contact(list_name_number : list):
@@ -86,6 +92,7 @@ FUNCTIONS = {
     'phone' : phone_number, 
     'delnum' : del_num_from_contact,
     'show all' : contact_book,
+    'pages' : show_by_pages,
     'setbday' : set_up_birthday,
     'correctbday' : change_bday,
     'daysleft' : days_to_bday,
