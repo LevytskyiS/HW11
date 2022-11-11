@@ -57,42 +57,29 @@ class Iterable:
 
 class Field:
     
-    def __init__(self, value) -> None:
+    def __init__(self, value):
+        self._value = None
         self.value = value
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        self._value = value
 
 
 class Name(Field):
-
-    def __init__(self, value) -> None:
-        self.__value = None
-        self.value = value
-        super().__init__(value)
-
-    @property
-    def value(self): 
-        return self.__value
-
-    @value.setter
-    def value(self, value):
-        self.__value = value
+    pass
 
 
 class Phone(Field):
-
-    def __init__(self, value) -> None:
-        self.__value = None
-        self.value = value
-        super().__init__(value)
-
-    @property
-    def value(self): 
-        return self.__value
-
-    @value.setter
+    @Field.value.setter
     def value(self, value):
         if value < 100:
             raise ValueError
-        self.__value = value
+        self._value = value
 
 
 class Birthday:
@@ -129,7 +116,7 @@ class Record:
                 return f'The number was changed.'
             else:
                 continue
-            
+
     def delete_phone(self, number):
         for values in self.list_of_obj_of_phone:
             if values.value == number:
