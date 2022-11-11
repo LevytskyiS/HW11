@@ -128,16 +128,16 @@ class Record:
                 values.value = new_phone
                 return f'The number was changed.'
             else:
-                return f'The number {phone} isn`t in your book.'
-
+                continue
+            
     def delete_phone(self, number):
         for values in self.list_of_obj_of_phone:
             if values.value == number:
                 self.list_of_obj_of_phone.remove(values)
                 return f'The number was deleted successfully.'
-            else:
-                return f'The number {number} isn`t in your book.'
-    
+            elif values.value != number:
+                continue
+
     def set_birthday(self, birthday):
         self.birthday =  Birthday(birthday)
         return f'The birthday was set successfully.'

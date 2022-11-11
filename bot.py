@@ -10,9 +10,9 @@ from datetime import date
 '''
 
 def decor(func):
-    def wrapper(arg):
+    def wrapper(*args, **kwargs):
         try:
-            return func(arg)
+            return func(*args, **kwargs)
         except IndexError:
             return 'There is no phone number. Enter name and phone.' # If user didn`t put the number, only name.
         except ValueError: 
@@ -111,14 +111,8 @@ def handle(inp_by_user : str):
     else:
         func = inp_by_user[0]
     args = inp_by_user[1:]
-    
-    if len(inp_by_user) == 1:
-        return FUNCTIONS[func](args)
 
-    elif func == 'show all' or func == 'good bye':
-        return FUNCTIONS[func](args)
-
-    elif len(inp_by_user) == 2 or len(inp_by_user) > 2:
+    if func in FUNCTIONS.keys():
         return FUNCTIONS[func](args)
 
 while True:
